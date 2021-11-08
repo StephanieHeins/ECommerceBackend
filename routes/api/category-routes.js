@@ -77,8 +77,23 @@ router.put('/:id', (req, res) => {
   // update a category by its `id` value
 });
 
-router.delete('/:id', (req, res) => {
-  // delete a category by its `id` value
+// DELETE category by `id` 
+router.delete('/:id', async (req, res) => {
+  try {
+    const dbCategoryData = await Category.destroy({
+      where: { id: req.params.id }
+    })
+    // If specified id is not found, send 404 response and message
+    if (!dbCategoryData) {
+      res.status(404).json({ message: 'No Category with given ID' });
+      return;
+    }
+    // Return OK Status and dbCategoryData
+    res.status(200).json(dbCategoryData);
+  // Error catch & 500 status
+  } catch (err) {
+    res.status(500).json(err);
+  }
 });
 
 module.exports = router;
