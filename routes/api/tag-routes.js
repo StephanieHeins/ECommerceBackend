@@ -19,14 +19,35 @@ router.get('/', async (req, res) => {
 });
 
 // Find ONE tag by `id`
-router.get('/:id', (req, res) => {
+router.get('/:id', async (req, res) => {
   // be sure to include its associated Product data
-
+  try {
+    const dbTagData = await Tag.findByPk(req.params.id, {
+        include: [{ model: Product, ProductTag }]
+    });
+    // 404 status if ID not found
+    if (!dbTagData) {
+      res.status(404).json({ message: 'No tag foud with given ID' });
+      return;
+    }
+    // Return OK Status and dbTagData
+    res.status(200).json(dbTagData);
+    // Error catch & 500 status 
+  } catch (err) {
+    res.status(500).json(err);
+  }
 });
 
 // CREATE new tag 
-router.post('/', (req, res) => {
-
+router.post('/', async (req, res) => {
+  try {
+  const dbTagData = await Tag.create(req.body);
+  // Return OK Status and dbTagData
+  res.status(200).json(dbTagData);
+  // Error catch & 400 status 
+  } catch (err) {
+    res.status(400).json(err);
+  }
 });
 
 // UPDATE tag name by its `id`
