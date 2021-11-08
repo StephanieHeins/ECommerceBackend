@@ -84,9 +84,8 @@ router.post('/', (req, res) => {
     });
 });
 
-// UPDATE product 
+// UPDATE product data
 router.put('/:id', (req, res) => {
-  // update product data
   Product.update(req.body, {
     where: {
       id: req.params.id,
@@ -127,8 +126,22 @@ router.put('/:id', (req, res) => {
 });
 
 // DELETE product by `id` 
-router.delete('/:id', (req, res) => {
-
+router.delete('/:id', async (req, res) => {
+    try {
+      const dbProductData = await Product.destroy({
+        where: { id: req.params.id }
+      });
+      // 404 status if ID not found 
+      if (!dbProductData) {
+        res.status(404).json({ message: 'No Product with this id!' });
+        return;
+      }
+      // Return OK Status and dbProductData
+      res.status(200).json(dbProductData);
+    // Error catch & 500 status 
+    } catch (err) {
+      res.status(500).json(err);
+    }
 });
 
 module.exports = router;
