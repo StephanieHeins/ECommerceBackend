@@ -3,31 +3,60 @@ const { Category, Product } = require('../../models');
 
 // The `/api/categories` endpoint
 
-router.get('/', (req, res) => {
-  // find all categories
-  // be sure to include its associated Products
+// router.get('/', (req, res) => {
+
+//Find ALL categories 
+  router.get('/', async (req, res) => {
+    try {
+      const dbCategoryData = await Category.findAll({
+        include: [{ model: Product }]
+      });
+      // Return OK Status and dbCategoryData
+      res.status(200).json(dbCategoryData);
+    // Error catch & 500 status 
+    } catch (err) {
+      res.status(500).json(err);
+    }
+  });
+
+  /*
   Category.findAll({
     include: {
       model: Product,
       attributes: ['id', 'product_name', 'price', 'stock', 'category_id']
     }
   })
-    .then(dbCatData => {
-      if(!dbCatData) {
-        res.status(404).json({message: 'No categories found'});
+    .then(dbCategoryData => {
+      if(!dbCategoryData) {
+        res.status(404).json({message: 'Category not found'});
         return;
       }
-      res.json(dbCatData);
+      res.json(dbCategoryData);
     })
     .catch(err => {
       console.log(err);
       res.status(500).json(err)
     });
 });
+*/
 
-router.get('/:id', (req, res) => {
-  // find one category by its `id` value
-  // be sure to include its associated Products
+// ONE Category by its `id` value 
+router.get('/:id', async (req, res) => {
+  try {
+    const dbCategoryData = await Category.findByPk(req.params.id, {
+        include: [{ model: Product }]
+    });
+    // 404 status if ID not found 
+    if (!dbCategoryData) {
+      res.status(404).json({ message: 'No category found with given ID' });
+      return;
+    }
+    // Return OK Status and dbCategoryData
+    res.status(200).json(dbCategoryData);
+    // Error catch & 500 status 
+  } catch (err) {
+    res.status(500).json(err);
+  }
 });
 
 router.post('/', (req, res) => {
