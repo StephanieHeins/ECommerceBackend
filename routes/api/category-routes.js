@@ -40,7 +40,7 @@ const { Category, Product } = require('../../models');
 });
 */
 
-// ONE Category by its `id` value 
+// Find ONE Category by its `id` value 
 router.get('/:id', async (req, res) => {
   try {
     const dbCategoryData = await Category.findByPk(req.params.id, {
@@ -73,8 +73,25 @@ router.post('/', async (req, res) => {
     }
 });
 
-router.put('/:id', (req, res) => {
-  // update a category by its `id` value
+// UPDATE category by `id`
+router.put('/:id', async (req, res) => {
+  try {
+    const dbCategoryData = await Category.update(req.body, {
+      where: {
+        id: req.params.id 
+      }
+    });
+    // 404 status if ID not found 
+    if (!dbCategoryData) {
+      res.status(404).json({ message: 'No category found with given ID' });
+      return;
+    }
+    // Return OK Status and dbCategoryData
+    res.status(200).json(dbCategoryData);  
+  // Error catch & 500 status
+  } catch (err) {
+    res.status(500).json(err);
+  }
 });
 
 // DELETE category by `id` 
@@ -83,9 +100,9 @@ router.delete('/:id', async (req, res) => {
     const dbCategoryData = await Category.destroy({
       where: { id: req.params.id }
     })
-    // If specified id is not found, send 404 response and message
+    // 404 status if ID not found 
     if (!dbCategoryData) {
-      res.status(404).json({ message: 'No Category with given ID' });
+      res.status(404).json({ message: 'No Category found with given ID' });
       return;
     }
     // Return OK Status and dbCategoryData
