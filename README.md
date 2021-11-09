@@ -41,14 +41,13 @@ Setup:
 ## Demos
 
 ## Setup
-
+![Live Demo](Assets/EcommerceSetup.gif)
 
 ## Products
-
+![Live Demo](Assets/EcommerceProducts.gif)
 
 ## Tags
-
+![Live Demo](Assets/EcommerceTags.gif)
 
 ## Categories 
-
-![Live Demo](Assets/TeamProfileGenGif.gif)
+![Live Demo](Assets/EcommerceCategories.gif)
