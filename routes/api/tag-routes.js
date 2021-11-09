@@ -51,7 +51,7 @@ router.post('/', async (req, res) => {
 });
 
 // UPDATE tag name by its `id`
-router.put('/:id', (req, res) => {
+router.put('/:id', async (req, res) => {
   try {
     const dbTagData = await Tag.update(req.body, {
       where: {id: req.params.id }
